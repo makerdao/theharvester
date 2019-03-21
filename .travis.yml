@@ -1,0 +1,15 @@
+dist: xenial
+sudo: required
+language: python
+python:
+- '3.6'
+before_install:
+- sudo add-apt-repository ppa:rmescandon/yq -y && sudo apt update && sudo apt install yq -y
+- yq w -i api-keys.yaml apikeys.hunter.key $HUNTER_KEY
+install:
+- pip install -r requirements.txt
+script:
+- ./theHarvester.py -d makerdao.com -b all -s -p 22,80,443 > `date "+%Y.%m.%d"`.txt
+after_install:
+  - ./post_to_rc.sh $ROOM $USER $TOKEN
+
